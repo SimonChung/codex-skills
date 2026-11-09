@@ -1,0 +1,7 @@
+interface:
+  display_name: "Eisenhower Project Planning"
+  short_description: "Plan projects with Eisenhower matrices"
+  default_prompt: "Use $eisenhower-project-planning to plan this project at project, module, and subfunction levels, including current implementation status."
+
+policy:
+  allow_implicit_invocation: true

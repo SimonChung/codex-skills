@@ -1,0 +1,4 @@
+interface:
+  display_name: "Word to Markdown"
+  short_description: "Convert DOCX files with Microsoft MarkItDown"
+  default_prompt: "Convert the supplied Word DOCX into Markdown using Microsoft MarkItDown, preserving text, headings, tables, links, and optional embedded media."

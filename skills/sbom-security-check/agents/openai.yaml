@@ -1,0 +1,3 @@
+interface:
+  display_name: "SBOM 與漏洞檢查"
+  short_description: "產生與檢查 SBOM，掃描套件及容器漏洞，建立更新與部署前的安全檢查"

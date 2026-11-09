@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-10",
+  "timezone": "Asia/Taipei",
+  "skillsImported": 4,
+  "skillSource": "Existing user-authored folders; system skills and plugin caches excluded",
+  "skillStructureValidation": "All 4 passed Codex skill-creator quick_validate.py",
+  "windowsTests": {
+    "passed": 12,
+    "includes": "Real directory junctions, backup/preservation, two Git checkouts with a local bare remote, and SBOM rejection controls",
+    "skipped": 0
+  },
+  "posixTests": {
+    "skippedReason": "Image has no Git; Git round-trip ran on Windows",
+    "passed": 11,
+    "environment": "Existing python:3.13-slim Docker image",
+    "skipped": 1
+  },
+  "macNativeVerified": false,
+  "windowsInstallation": "All 4 linked to this repository; original directories backed up outside the discovery directory",
+  "sbom": {
+    "status": "passed",
+    "startedAt": "2026-11-10T07:09:08.936878+08:00",
+    "scanner": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+    "requirementsSha256": "4a4e5a63f78dde7c42a22c00409a8da5b3f12748137aa96795c4157142830f8e",
+    "threshold": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "exclusions": [],
+    "scope": "Pinned isolated validation environment including MarkItDown DOCX/PDF dependencies and validator tooling",
+    "notScanned": "Host OS, Python executable/stdlib, Git, PowerShell, Codex bundled runtimes, Mac native environment, scanner image and unrelated task-specific SBOM targets",
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-10T19:03:15.276467354Z",
+      "UpdatedAt": "2026-11-09T19:03:15.276467525Z",
+      "DownloadedAt": "2026-11-09T23:06:31.978732849Z"
+    },
+    "coverage": {
+      "packages": 31,
+      "highCritical": 0,
+      "coverage": "exact pinned inventory"
+    },
+    "finishedAt": "2026-11-10T07:09:10.632592+08:00"
+  },
+  "negativeControl": {
+    "highCritical": 7,
+    "reportDirectory": ".work/security/20261109T230748Z-92408ef9",
+    "scannerExitCode": 1,
+    "outcome": "blocked as expected",
+    "package": "urllib3==1.26.5"
+  }
+}

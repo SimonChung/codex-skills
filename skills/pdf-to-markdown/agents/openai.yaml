@@ -1,0 +1,4 @@
+interface:
+  display_name: "PDF to Markdown"
+  short_description: "Convert PDF files with Microsoft MarkItDown"
+  default_prompt: "Convert the supplied PDF into Markdown using Microsoft MarkItDown, preserving document structure and reporting OCR limitations."
