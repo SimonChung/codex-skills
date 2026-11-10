@@ -24,7 +24,17 @@
   "workflowValidation": {
     "yamlParsed": true,
     "shellSyntax": "bash -n passed",
-    "hostedRun": "To be verified after publishing workflow to default branch"
+    "hostedRun": {
+      "id": 42880313998,
+      "url": "https://github.com/SimonChung/codex-skills/actions/runs/42880313998",
+      "commit": "bfe0d51e2f9146e64863d3614a350e53f9b1c5fc",
+      "conclusion": "success",
+      "runner": "GitHub-hosted ubuntu-24.04",
+      "testsPassed": 27,
+      "result": "no_update",
+      "published": false,
+      "log": ".work/tool-monitor-first-run/job.log"
+    }
   },
   "liveVersionCheck": {
     "status": "no_update",
