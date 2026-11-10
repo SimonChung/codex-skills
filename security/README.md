@@ -27,7 +27,7 @@ Mac 需要另行實機驗收；使用 `python3` 與 `.work/validation-venv/bin/p
 
 ## 掃描流程與阻擋條件
 
-`python scripts/verify_sbom.py` 使用本機 Docker 執行固定的 Trivy `0.76.1` 映像及 digest。只掛載必要的依賴快照及本次報告目錄，先產生 CycloneDX，再掃描 HIGH／CRITICAL；不忽略未修復漏洞，不使用忽略清單，不上傳技能內容或使用者文件。
+`python scripts/verify_sbom.py` 使用本機 Docker 執行固定的 Trivy `0.76.2` 映像及多架構 digest `sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb`。只掛載必要的依賴快照及本次報告目錄，先產生 CycloneDX，再掃描 HIGH／CRITICAL；不忽略未修復漏洞，不使用忽略清單，不上傳技能內容或使用者文件。
 
 除了檢查 scanner 回傳碼，還逐項比對 CycloneDX 的 PyPI 名稱／版本與完整快照，拒絕缺漏套件、缺掃描報告、未識別依賴生態、驗證期間快照被修改、scanner 失敗及 HIGH／CRITICAL 命中。每次在 `.work/security/<時間-識別碼>/` 保存 SBOM、JSON 報告、日誌、資料庫時間及成功或失敗摘要。
 
@@ -36,6 +36,8 @@ Mac 需要另行實機驗收；使用 `python3` 與 `.work/validation-venv/bin/p
 範圍不包含主機 OS、Python 執行檔／標準函式庫、Git、PowerShell、Codex bundled runtime、Mac 原生環境、scanner 映像本身，或未來使用 SBOM 技能時會檢查的其他專案。技能中的 Docker／npm／Go 工具依當次目標專案另行驗證。
 
 初次發布的 [2026-11-10 驗證摘要](verification-20261110.json) 記錄技能結構、Windows／POSIX 測試與 31 個驗證環境套件的 SBOM 結果；另以 `urllib3==1.26.5` 真實掃描確認 High 漏洞會回傳非 0 並阻擋通過。
+
+Trivy 0.76.2 升級後的 [2026-11-11 驗證摘要](verification-20261111.json) 記錄 macOS 上的 12 項測試、31 個固定套件的重新掃描與已知 High 套件的拒絕結果；未重新安裝完整 Windows 驗證環境，也未重跑 Windows 測試。
 
 ## 來源
 

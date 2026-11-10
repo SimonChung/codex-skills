@@ -1,0 +1,86 @@
+{
+  "status": "passed",
+  "startedAt": "2026-11-10T18:23:06.924590+00:00",
+  "scanner": "aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+  "requirementsSha256": "4a4e5a63f78dde7c42a22c00409a8da5b3f12748137aa96795c4157142830f8e",
+  "threshold": [
+    "HIGH",
+    "CRITICAL"
+  ],
+  "exclusions": [],
+  "scope": "Pinned isolated validation environment including MarkItDown DOCX/PDF dependencies and validator tooling",
+  "notScanned": "Host OS, Python executable/stdlib, Git, PowerShell, Codex bundled runtimes, Mac native environment, scanner image and unrelated task-specific SBOM targets",
+  "database": {
+    "Version": 2,
+    "NextUpdate": "2026-11-11T13:03:09.93195222Z",
+    "UpdatedAt": "2026-11-10T13:03:09.93195248Z",
+    "DownloadedAt": "2026-11-10T18:23:14.594129464Z"
+  },
+  "coverage": {
+    "packages": 31,
+    "highCritical": 0,
+    "coverage": "exact pinned inventory"
+  },
+  "finishedAt": "2026-11-10T18:23:15.919522+00:00",
+  "recordedAt": "2026-11-11T02:25:13.377796+08:00",
+  "image": {
+    "reference": "aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+    "observedVersion": "0.76.2",
+    "digestType": "multi-platform OCI image index",
+    "verifiedPlatforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "release": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.2"
+  },
+  "host": "macOS arm64",
+  "baseCommit": "56e1bb91f53e44ae29981c62f2166bfdfa2b53ad",
+  "report": ".work/security/20261110T182306Z-6a131e35",
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "passed": 12,
+    "exitCode": 0
+  },
+  "negativeControl": {
+    "input": "urllib3==1.26.5",
+    "expectedExitCode": 1,
+    "observedExitCode": 1,
+    "expectedStatus": "failed",
+    "observedStatus": "failed",
+    "findings": [
+      {
+        "id": "CVE-2023-43804",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2025-66418",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2025-66471",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-21441",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-44431",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-97687",
+        "severity": "HIGH"
+      },
+      {
+        "id": "CVE-2026-97689",
+        "severity": "HIGH"
+      }
+    ],
+    "report": ".work/security/20261110T182417Z-95b1e708"
+  },
+  "limitations": [
+    "Scanned the pinned validation inventory; did not reinstall the Windows validation environment on macOS.",
+    "Windows execution was not rerun."
+  ]
+}
