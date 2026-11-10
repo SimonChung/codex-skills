@@ -94,3 +94,5 @@ python -m unittest discover -s tests -v
 ```
 
 依賴及 SBOM 的範圍、重跑命令與限制見 [security/README.md](security/README.md)。
+
+SBOM 工具版本由 GitHub Actions 每週一台北時間 09:00 檢查，有新版才建立指派給維護者的 Issue，安全修補優先；不依賴本機開機。設定與手動預覽方式見 [每週版本檢查](security/README.md#每週-sbom-工具版本檢查)。

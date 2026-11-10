@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-11T02:56:32.066099+08:00",
+  "scope": "Weekly GitHub Actions SBOM tool version monitor; currently Trivy only",
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "passed": 27,
+    "exitCode": 0,
+    "covered": [
+      "no update without write",
+      "stable semantic versions",
+      "draft/prerelease exclusion",
+      "new release assigned Issue",
+      "read-only dry run",
+      "intermediate security release priority",
+      "open/closed Issue deduplication",
+      "one-time security escalation",
+      "registry/API failure",
+      "pagination",
+      "multi-architecture content digest",
+      "scanner pin parsing without execution"
+    ]
+  },
+  "workflowValidation": {
+    "yamlParsed": true,
+    "shellSyntax": "bash -n passed",
+    "hostedRun": "To be verified after publishing workflow to default branch"
+  },
+  "liveVersionCheck": {
+    "status": "no_update",
+    "current": "0.76.2",
+    "published": false
+  },
+  "sbom": {
+    "report": ".work/security/20261110T185511Z-0caf894a",
+    "scanner": "aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+    "coverage": {
+      "packages": 31,
+      "highCritical": 0,
+      "coverage": "exact pinned inventory"
+    },
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-11T13:03:09.93195222Z",
+      "UpdatedAt": "2026-11-10T13:03:09.93195248Z",
+      "DownloadedAt": "2026-11-10T18:23:14.594129464Z"
+    }
+  },
+  "newDependencies": [],
+  "sourceHashes": {
+    "scripts/check_sbom_tool_versions.py": "a13ddbea843297d223075eca0ac0c0e3bc70e7d557e9db44ced6db8b244861cb",
+    "tests/test_tool_versions.py": "f11e7474c0361ab00e1c380ecdeb880b3d85f18bf613a63e15a44627c4ee9eae",
+    ".github/workflows/sbom-tool-versions.yml": "ea4d3f9de8ba71f2c1bf7cb8ed57fce1579c67bedf5c1f2454d8f967bd3048be"
+  },
+  "limitations": [
+    "GitHub Issue notification delivery depends on user notification settings.",
+    "Live upstream currently has no newer stable release; positive notification and duplicate branches were tested with isolated API fixtures.",
+    "Windows execution and GitHub runner host OS were not scanned."
+  ]
+}

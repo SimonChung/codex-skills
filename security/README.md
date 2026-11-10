@@ -39,8 +39,33 @@ Mac 需要另行實機驗收；使用 `python3` 與 `.work/validation-venv/bin/p
 
 Trivy 0.76.2 升級後的 [2026-11-11 驗證摘要](verification-20261111.json) 記錄 macOS 上的 12 項測試、31 個固定套件的重新掃描與已知 High 套件的拒絕結果；未重新安裝完整 Windows 驗證環境，也未重跑 Windows 測試。
 
+## 每週 SBOM 工具版本檢查
+
+[SBOM tool versions](https://github.com/SimonChung/codex-skills/actions/workflows/sbom-tool-versions.yml) 在 GitHub-hosted Ubuntu runner 執行，排定每週一 UTC 01:00（台北 09:00）；GitHub 排程可能延遲，Mac 不需要開機。也可用 Actions 的 Run workflow 手動觸發，勾選 `dry_run` 時只預覽、不建立 Issue。
+
+`scripts/check_sbom_tool_versions.py` 從 `scripts/verify_sbom.py` 讀取實際鎖定的 Trivy 版本，查詢官方 GitHub Releases，排除 draft／prerelease。這是掃描工具的版本巡檢，不是全機軟體或 31 個驗證環境套件的版本巡檢。新增程式只用 Python 標準函式庫與 runner 內建 Git；沒有新增第三方 action 或 Python 套件。
+
+- 沒有較新的正式版：只記錄 Actions 執行摘要，不建立 Issue。
+- 有新版：每個最新候選版本建立一個 Issue，指派並提及 `SimonChung`，由 GitHub 通知；通知送往網站／電子郵件／行動裝置由個人的 GitHub 通知設定決定。
+- 官方新版說明包含 CVE、GHSA 或安全／漏洞修補線索時，以「安全修補優先」為標題，建議 24～48 小時內評估，並將安全版本列在一般更新之前。會一起檢查目前版本到最新版之間的正式版本，避免漏掉中間修補版；線索比對不是漏洞適用性或已受攻擊的判定。
+- 開啟與已關閉的 Issue 都參與去重，同版本不重複建立。原本一般更新後來出現安全修補線索時，更新原 Issue 並留下單次升級提醒。
+- 新版映像從官方 Docker Hub 取得索引，核對內容 SHA-256 與 linux/amd64、linux/arm64 平台。GitHub／registry 查詢失敗、資料缺漏或無穩定版本皆回傳非 0，不能當作沒有新版；失敗保留在 Actions 紀錄。
+
+流程使用 GitHub 自動提供的 `GITHUB_TOKEN`，只授予 `contents: read` 與 `issues: write`。Git 以暫時的 askpass 讀取環境變數、抓取本次指定 commit，不保存認證。工作流程設有 concurrency 鎖，避免手動與排程同時建立重複 Issue。這個排程只檢查並提出 Issue；工具升級、SBOM 驗證、提交與推送仍是另外的開發工作。
+
+本機預覽：
+
+```sh
+python3 scripts/check_sbom_tool_versions.py
+python3 -m unittest discover -s tests -v
+```
+
+`--publish` 供工作流程建立／更新 Issue 使用，需要 `GH_TOKEN`。私人儲存庫有新版時，本機預覽也需要可讀取該儲存庫 Issues 的權杖；無新版時不查詢 Issues。去重依賴保留由 `github-actions[bot]` 建立的 Issue 與其中識別標記，關閉 Issue 即可，不應刪除。
+
 ## 來源
 
 - [Microsoft MarkItDown](https://pypi.org/project/markitdown/)
 - [PyYAML](https://pypi.org/project/PyYAML/)
 - [Trivy Python 套件辨識](https://trivy.dev/docs/latest/coverage/language/python/)
+- [GitHub Actions 排程事件](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
+- [GITHUB_TOKEN 最小權限](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token)
