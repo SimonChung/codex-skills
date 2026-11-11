@@ -5,5 +5,15 @@
       "kind": "python_scanner",
       "path": "scripts/verify_sbom.py"
     }
-  ]
+  ],
+  "go": {
+    "pin_sources": [
+      {
+        "kind": "go_mod",
+        "path": "go.mod",
+        "optional": true
+      }
+    ],
+    "baseline": "1.27.4"
+  }
 }
