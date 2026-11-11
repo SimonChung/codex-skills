@@ -26,7 +26,7 @@ def version(value: str) -> tuple[int, int, int]:
     return tuple(map(int, match.groups()))
 
 
-def current_version(path: Path = ROOT / 'scripts/verify_sbom.py') -> str:
+def python_scanner_version(path: Path) -> str:
     for node in ast.parse(path.read_text(encoding='utf-8')).body:
         if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'SCANNER' for t in node.targets):
             pin = ast.literal_eval(node.value)
@@ -36,6 +36,50 @@ def current_version(path: Path = ROOT / 'scripts/verify_sbom.py') -> str:
             version(match[1])
             return match[1]
     raise ValueError('Missing SCANNER pin')
+
+
+def current_pin(root: Path | None = None) -> dict:
+    root = (root or ROOT).resolve()
+    config = json.loads((root / '.github/sbom-tool-monitor.json').read_text(encoding='utf-8'))
+    if config.get('schema_version') != 1 or not isinstance(config.get('pin_sources'), list):
+        raise ValueError('Invalid SBOM tool monitor configuration')
+    found = []
+    for source in config['pin_sources']:
+        relative = Path(source['path'])
+        path = (root / relative).resolve()
+        if relative.is_absolute() or not path.is_relative_to(root):
+            raise ValueError('Scanner source must be inside the repository')
+        if not path.exists() and source.get('optional') is True:
+            continue
+        kind = source['kind']
+        if kind == 'python_scanner':
+            value = python_scanner_version(path)
+        else:
+            content = path.read_text(encoding='utf-8')
+            if kind == 'trivy_image':
+                values = set(re.findall(r'aquasec/trivy:(\d+\.\d+\.\d+)@sha256:[0-9a-f]{64}(?![0-9a-f])', content))
+            elif kind == 'go_version_guard':
+                values = set(re.findall(r'if tool\.Version != "(\d+\.\d+\.\d+)"', content))
+            else:
+                raise ValueError(f'Unknown scanner source kind: {kind}')
+            if len(values) != 1:
+                raise ValueError(f'Expected exactly one pinned Trivy version in {relative}')
+            value = values.pop()
+        version(value)
+        found.append({'version': value, 'source': relative.as_posix()})
+    if found:
+        if len({item['version'] for item in found}) != 1:
+            raise ValueError('Scanner source versions disagree')
+        return {'mode': 'scanner_pin', 'version': found[0]['version'], 'sources': [item['source'] for item in found]}
+    baseline = config.get('baseline')
+    if not isinstance(baseline, str):
+        raise ValueError('No scanner source or explicit release-monitor baseline')
+    version(baseline)
+    return {'mode': 'release_baseline', 'version': baseline, 'sources': ['.github/sbom-tool-monitor.json']}
+
+
+def current_version(path: Path | None = None) -> str:
+    return python_scanner_version(path) if path is not None else current_pin()['version']
 
 
 def request_json(url: str, *, headers: dict | None = None, data: dict | None = None, method: str = 'GET'):
@@ -118,14 +162,14 @@ def image_digest(release_version: str) -> str:
     return digest
 
 
-def issue_content(current: str, releases: list[dict], digest: str, assignee: str) -> tuple[str, str]:
+def issue_content(current: str, releases: list[dict], digest: str, assignee: str, repository: str) -> tuple[str, str]:
     latest = releases[0]['tag_name'].removeprefix('v')
     evidence = security_evidence(releases)
     marker = f'<!-- codex-skills:sbom-tool-update:trivy:{latest} -->'
     priority = '安全修補優先' if evidence else '一般版本更新'
     title = f'[{priority}] Trivy {latest} 已發布（目前 {current}）'
-    lines = [marker, f'@{assignee}，codex-skills 的 SBOM 掃描器有新正式版本。', '',
-             f'- 目前鎖定：`{current}`', f'- 最新正式版：`{latest}`',
+    lines = [marker, f'@{assignee}，{repository} 追蹤的 Trivy 有新正式版本。', '',
+             f'- 目前採用版本／巡檢基準：`{current}`（來源見 `.github/sbom-tool-monitor.json`）', f'- 最新正式版：`{latest}`',
              f'- 發布時間：{releases[0]["published_at"]}',
              f'- 新版映像：`aquasec/trivy:{latest}@{digest}`',
              '- 已確認多架構索引包含 linux/amd64 與 linux/arm64。', '',
@@ -166,7 +210,7 @@ def check(api: GitHub, repository: str, assignee: str, *, publish: bool = False,
     digest = digest_reader(latest)
     if not re.fullmatch(r'sha256:[0-9a-f]{64}', digest):
         raise ValueError('Invalid candidate image digest')
-    title, body = issue_content(current, releases, digest, assignee)
+    title, body = issue_content(current, releases, digest, assignee, repository)
     result.update(status='security_escalation' if existing else 'update_available', digest=digest, title=title, body=body)
     if not publish:
         return result
@@ -188,7 +232,7 @@ def check(api: GitHub, repository: str, assignee: str, *, publish: bool = False,
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--repository', default=os.environ.get('GITHUB_REPOSITORY', 'SimonChung/codex-skills'))
+    parser.add_argument('--repository', default=os.environ.get('GITHUB_REPOSITORY'))
     parser.add_argument('--assignee', default='SimonChung')
     parser.add_argument('--publish', action='store_true', help='Create/update Issues; default is read-only')
     args = parser.parse_args()
@@ -196,7 +240,10 @@ def main() -> int:
         token = os.environ.get('GH_TOKEN', '')
         if args.publish and not token:
             raise ValueError('GH_TOKEN is required for publishing')
+        if not args.repository:
+            raise ValueError('Set GITHUB_REPOSITORY or --repository owner/repository')
         result = check(GitHub(token), args.repository, args.assignee, publish=args.publish)
+        result['version_basis'] = current_pin()
         code = 0
     except (OSError, ValueError, KeyError, TypeError) as exc:
         # Never include request headers or credential values in reports.

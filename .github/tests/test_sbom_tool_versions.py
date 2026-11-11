@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import patch
 from urllib.error import HTTPError
 
-spec = importlib.util.spec_from_file_location('tool_versions', Path(__file__).resolve().parents[1] / 'scripts/check_sbom_tool_versions.py')
+spec = importlib.util.spec_from_file_location('tool_versions', Path(__file__).resolve().parents[2] / 'scripts/check_sbom_tool_versions.py')
 monitor = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(monitor)
 
@@ -83,6 +83,8 @@ class VersionMonitorTests(unittest.TestCase):
         self.assertEqual(payload['assignees'], ['example'])
         self.assertIn('0.76.3@' + DIGEST, payload['body'])
         self.assertIn('@example', payload['body'])
+        self.assertIn(REPO, payload['body'])
+        self.assertNotIn('codex-skills 的', payload['body'])
 
     def test_dry_run_is_read_only_even_with_new_release(self):
         api = FakeGitHub([release('v0.76.3')])
@@ -133,7 +135,7 @@ class VersionMonitorTests(unittest.TestCase):
     def test_github_failure_is_nonzero_and_not_no_update(self):
         error = HTTPError('https://api.github.com/repos/example/skills', 403, 'Forbidden', {}, None)
         self.addCleanup(error.close)
-        with patch.object(monitor.GitHub, 'pages', side_effect=error), patch('sys.argv', ['check']), patch('sys.stdout', new_callable=io.StringIO) as out:
+        with patch.object(monitor.GitHub, 'pages', side_effect=error), patch('sys.argv', ['check', '--repository', REPO]), patch('sys.stdout', new_callable=io.StringIO) as out:
             self.assertEqual(monitor.main(), 1)
         self.assertEqual(json.loads(out.getvalue())['status'], 'failed')
 
@@ -160,6 +162,11 @@ class VersionMonitorTests(unittest.TestCase):
 
 
 class ScannerPinTests(unittest.TestCase):
+    def config(self, root, sources, **extra):
+        (root / '.github').mkdir(exist_ok=True)
+        (root / '.github/sbom-tool-monitor.json').write_text(json.dumps({
+            'schema_version': 1, 'pin_sources': sources, **extra}))
+
     def test_pin_is_read_without_executing_script(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'scanner.py'
@@ -168,6 +175,50 @@ class ScannerPinTests(unittest.TestCase):
             path.write_text("SCANNER = 'aquasec/trivy:latest'\n")
             with self.assertRaises(ValueError):
                 monitor.current_version(path)
+
+    def test_powershell_source_follows_actual_pin(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'verify.ps1'
+            self.config(root, [{'kind': 'trivy_image', 'path': 'verify.ps1'}])
+            source.write_text("$scanner = 'aquasec/trivy:0.76.3@" + DIGEST + "'\n")
+            self.assertEqual(monitor.current_pin(root)['version'], '0.76.3')
+            source.write_text("$scanner = 'aquasec/trivy:latest'\n")
+            with self.assertRaises(ValueError):
+                monitor.current_pin(root)
+
+    def test_baseline_is_explicit_and_optional_source_takes_precedence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.config(root, [{'kind': 'go_version_guard', 'path': 'image.go', 'optional': True}], baseline='0.76.2')
+            self.assertEqual(monitor.current_pin(root)['mode'], 'release_baseline')
+            (root / 'image.go').write_text('if tool.Version != "0.77.0" {\n')
+            self.assertEqual(monitor.current_pin(root), {'mode': 'scanner_pin', 'version': '0.77.0', 'sources': ['image.go']})
+            (root / 'image.go').write_text('invalid guard')
+            with self.assertRaises(ValueError):
+                monitor.current_pin(root)
+
+    def test_missing_required_source_cannot_fall_back(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.config(root, [{'kind': 'trivy_image', 'path': 'missing'}], baseline='0.76.2')
+            with self.assertRaises(FileNotFoundError):
+                monitor.current_pin(root)
+            self.config(root, [])
+            with self.assertRaises(ValueError):
+                monitor.current_pin(root)
+
+    def test_source_traversal_and_disagreement_fail(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.config(root, [{'kind': 'trivy_image', 'path': '../outside', 'optional': True}])
+            with self.assertRaises(ValueError):
+                monitor.current_pin(root)
+            for filename, value in [('a', '0.76.2'), ('b', '0.76.3')]:
+                (root / filename).write_text('aquasec/trivy:' + value + '@' + DIGEST)
+            self.config(root, [{'kind': 'trivy_image', 'path': filename} for filename in ['a', 'b']])
+            with self.assertRaises(ValueError):
+                monitor.current_pin(root)
 
 
 if __name__ == '__main__':

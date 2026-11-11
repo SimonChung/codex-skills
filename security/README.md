@@ -43,7 +43,7 @@ Trivy 0.76.2 升級後的 [2026-11-11 驗證摘要](verification-20261111.json) 
 
 [SBOM tool versions](https://github.com/SimonChung/codex-skills/actions/workflows/sbom-tool-versions.yml) 在 GitHub-hosted Ubuntu runner 執行，排定每週一 UTC 01:00（台北 09:00）；GitHub 排程可能延遲，Mac 不需要開機。也可用 Actions 的 Run workflow 手動觸發，勾選 `dry_run` 時只預覽、不建立 Issue。
 
-`scripts/check_sbom_tool_versions.py` 從 `scripts/verify_sbom.py` 讀取實際鎖定的 Trivy 版本，查詢官方 GitHub Releases，排除 draft／prerelease。這是掃描工具的版本巡檢，不是全機軟體或 31 個驗證環境套件的版本巡檢。新增程式只用 Python 標準函式庫與 runner 內建 Git；沒有新增第三方 action 或 Python 套件。
+`scripts/check_sbom_tool_versions.py` 依 `.github/sbom-tool-monitor.json` 從 `scripts/verify_sbom.py` 讀取實際鎖定的 Trivy 版本，查詢官方 GitHub Releases，排除 draft／prerelease。這是掃描工具的版本巡檢，不是全機軟體或 31 個驗證環境套件的版本巡檢。新增程式只用 Python 標準函式庫與 runner 內建 Git；沒有新增第三方 action 或 Python 套件。共用檢查器也支援其他儲存庫的 PowerShell／Go 版本來源或明列的巡檢基準，詳見[共用巡檢說明](../.github/SBOM_TOOL_MONITOR.md)。
 
 - 沒有較新的正式版：只記錄 Actions 執行摘要，不建立 Issue。
 - 有新版：每個最新候選版本建立一個 Issue，指派並提及 `SimonChung`，由 GitHub 通知；通知送往網站／電子郵件／行動裝置由個人的 GitHub 通知設定決定。
@@ -56,7 +56,8 @@ Trivy 0.76.2 升級後的 [2026-11-11 驗證摘要](verification-20261111.json) 
 本機預覽：
 
 ```sh
-python3 scripts/check_sbom_tool_versions.py
+python3 scripts/check_sbom_tool_versions.py --repository SimonChung/codex-skills
+python3 -B -m unittest discover -s .github/tests -p 'test_sbom_tool_versions.py' -v
 python3 -m unittest discover -s tests -v
 ```
 

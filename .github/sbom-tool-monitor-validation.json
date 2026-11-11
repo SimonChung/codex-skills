@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-11-11T03:14:07.759037+00:00",
+  "source_hashes": {
+    "scripts/check_sbom_tool_versions.py": "29e8223df8a0bf2c3fbc4b3d9972d81367c20153b569f3e85f47c76a6aca9aaa",
+    ".github/tests/test_sbom_tool_versions.py": "44377416c42b705bb21d97a8f66e3fc27252664f866ebc5f38fa4b59c4136535",
+    ".github/workflows/sbom-tool-versions.yml": "48ad25f7693e45d92619bcfbc94f7ed064874839bd8684243f64bc7bc1a50ed3",
+    ".github/sbom-tool-monitor.json": "80c5879f9887add8f5e930d7df7b8068ad091411762bb75acf267bc07b28f0b4"
+  },
+  "third_party_dependencies_added": [],
+  "scope": "Trivy release monitor only; application runtime, host Python/Git and pre-existing application dependencies are not revalidated by these checks.",
+  "unit": "passed",
+  "live": {
+    "status": "no_update",
+    "tool": "Trivy",
+    "current": "0.76.2",
+    "published": false,
+    "version_basis": {
+      "mode": "scanner_pin",
+      "version": "0.76.2",
+      "sources": [
+        "scripts/verify_sbom.py"
+      ]
+    }
+  },
+  "diff": "passed",
+  "tests": 19,
+  "separate_existing_sbom_validation": {
+    "report": ".work/security/20261111T031408Z-cba51bc7/summary.json",
+    "summary": {
+      "status": "passed",
+      "startedAt": "2026-11-11T03:14:08.877226+00:00",
+      "scanner": "aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+      "requirementsSha256": "4a4e5a63f78dde7c42a22c00409a8da5b3f12748137aa96795c4157142830f8e",
+      "threshold": [
+        "HIGH",
+        "CRITICAL"
+      ],
+      "exclusions": [],
+      "scope": "Pinned isolated validation environment including MarkItDown DOCX/PDF dependencies and validator tooling",
+      "notScanned": "Host OS, Python executable/stdlib, Git, PowerShell, Codex bundled runtimes, Mac native environment, scanner image and unrelated task-specific SBOM targets",
+      "database": {
+        "Version": 2,
+        "NextUpdate": "2026-11-11T13:03:09.93195222Z",
+        "UpdatedAt": "2026-11-10T13:03:09.93195248Z",
+        "DownloadedAt": "2026-11-10T18:23:14.594129464Z"
+      },
+      "coverage": {
+        "packages": 31,
+        "highCritical": 0,
+        "coverage": "exact pinned inventory"
+      },
+      "finishedAt": "2026-11-11T03:14:11.899169+00:00"
+    }
+  }
+}
