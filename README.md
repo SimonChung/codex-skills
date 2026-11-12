@@ -99,4 +99,4 @@ SBOM 工具版本由 GitHub Actions 每週一台北時間 09:00 檢查，有新�
 
 ## 專案工具版本巡檢
 
-GitHub Actions 每週只檢查本專案實際使用的 Trivy，有新版才通知，安全修補優先。設定與通知方式見[巡檢說明](.github/SBOM_TOOL_MONITOR.md)。
+GitHub Actions 每週檢查本專案實際使用的工具；固定版本依來源比較，未固定工具追蹤啟用後的新發布。有新版才通知，安全修補優先。工具清單、來源與通知去重方式見[巡檢說明](.github/SBOM_TOOL_MONITOR.md)。

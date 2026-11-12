@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "tools": {
+    "git": {
+      "mode": "watch",
+      "sources": [
+        {
+          "path": ".github/workflows/sbom-tool-versions.yml",
+          "pattern": "git init"
+        }
+      ],
+      "started_at": "2026-11-12T00:47:30.111816+00:00",
+      "initial_versions": []
+    },
+    "python": {
+      "mode": "watch",
+      "sources": [
+        {
+          "path": ".github/workflows/sbom-tool-versions.yml",
+          "pattern": "python3"
+        }
+      ],
+      "started_at": "2026-11-12T00:47:30.111816+00:00",
+      "initial_versions": []
+    },
+    "powershell": {
+      "mode": "watch",
+      "sources": [
+        {
+          "path": "scripts/manage_skills.py",
+          "pattern": "shutil.which\\('pwsh'\\)"
+        }
+      ],
+      "started_at": "2026-11-12T00:47:30.111816+00:00",
+      "initial_versions": []
+    },
+    "docker-engine": {
+      "mode": "watch",
+      "sources": [
+        {
+          "path": "scripts/verify_sbom.py",
+          "pattern": "\\['docker', 'run'"
+        }
+      ],
+      "started_at": "2026-11-12T00:47:30.111816+00:00",
+      "initial_versions": []
+    },
+    "docker-desktop": {
+      "mode": "watch",
+      "sources": [
+        {
+          "path": "scripts/verify_sbom.py",
+          "pattern": "\\['docker', 'run'"
+        }
+      ],
+      "started_at": "2026-11-12T00:47:30.111816+00:00",
+      "initial_versions": []
+    },
+    "pypi-pyyaml": {
+      "mode": "pin",
+      "sources": [
+        {
+          "path": "security/requirements-validation.txt",
+          "pattern": "^PyYAML==(?P<version>\\S+)$"
+        }
+      ]
+    },
+    "pypi-markitdown": {
+      "mode": "pin",
+      "sources": [
+        {
+          "path": "security/requirements-validation.txt",
+          "pattern": "^markitdown==(?P<version>\\S+)$"
+        }
+      ]
+    },
+    "pypi-pip": {
+      "mode": "pin",
+      "sources": [
+        {
+          "path": "security/requirements-validation.txt",
+          "pattern": "^pip==(?P<version>\\S+)$"
+        }
+      ]
+    }
+  }
+}

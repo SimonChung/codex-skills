@@ -1,17 +1,157 @@
 {
-  "checked_at": "2026-11-12T00:14:25.264173+00:00",
+  "checked_at": "2026-11-12T00:55:06.287806+00:00",
   "source_hashes": {
     "scripts/check_sbom_tool_versions.py": "f9dab52443d8afcbe572584d07292ce0db5bb4caef7721a52c14d9e7a8389186",
+    "scripts/check_project_tool_versions.py": "cb67b029c0dcf9c98cf812132d63bd5b523d304b8c55a6bbcf97c8bec3f2f585",
     ".github/tests/test_sbom_tool_versions.py": "197f35295275f8626bce3c69a1f7dea592fdf76b0d67716fc4dacecdefd1402b",
-    ".github/workflows/sbom-tool-versions.yml": "7cd7e975f70f27ab8bd6d41fbc12eb0969b27b83b52f0e0cb9a0b6825abed691",
-    ".github/sbom-tool-monitor.json": "eb3140478930c952aec9f58e24dd1e91316c278028549ebbcdec0d1ca0fa5493"
+    ".github/tests/test_project_tool_versions.py": "5281692f1a95c51eb5963f8617891a2bd5ac2a14bf26840d1d418bc98dd3680a",
+    ".github/workflows/sbom-tool-versions.yml": "8cb9fc8fd232a0d4a1e1d0c848b9bd05513cf4ec52c6e39b52072177af549068",
+    ".github/sbom-tool-monitor.json": "eb3140478930c952aec9f58e24dd1e91316c278028549ebbcdec0d1ca0fa5493",
+    ".github/project-tools.json": "dcf5e8414ef4bfc54475b3bb510b6b5191379b2fab7847726681dac74c1730b5"
   },
   "third_party_dependencies_added": [],
-  "scope": "Actual project tool versions only; no baselines; stdlib-only Python checker. Dependency validation is recorded separately.",
+  "scope": "Actual project tools, including pinned tools and explicit official-release watches for unpinned tools. No application dependency upgrade.",
   "unit": "passed",
+  "tests": 78,
   "live": {
     "status": "ok",
     "tools": [
+      {
+        "tool": "pip",
+        "tool_id": "pypi-pip",
+        "status": "update_available",
+        "published": false,
+        "version_basis": {
+          "mode": "pin",
+          "version": "25.1.1",
+          "versions": [
+            "25.1.1"
+          ],
+          "sources": [
+            {
+              "source": "security/requirements-validation.txt",
+              "versions": [
+                "25.1.1"
+              ]
+            }
+          ]
+        },
+        "latest_stable_upstream": "26.3",
+        "latest": "26.3",
+        "security": true,
+        "evidence": [
+          {
+            "version": "25.3",
+            "url": "https://osv.dev/vulnerability/GHSA-4xh5-x5gv-qwph",
+            "identifiers": [
+              "GHSA-4xh5-x5gv-qwph",
+              "CVE-2025-8869",
+              "PYSEC-2026-1795"
+            ]
+          },
+          {
+            "version": "26.1",
+            "url": "https://osv.dev/vulnerability/GHSA-58qw-9mgm-455v",
+            "identifiers": [
+              "GHSA-58qw-9mgm-455v",
+              "CVE-2026-3219",
+              "PYSEC-2026-2875"
+            ]
+          },
+          {
+            "version": "26.0",
+            "url": "https://osv.dev/vulnerability/GHSA-6vgw-5pg2-w6jp",
+            "identifiers": [
+              "GHSA-6vgw-5pg2-w6jp",
+              "CVE-2026-1703",
+              "PYSEC-2026-1796"
+            ]
+          },
+          {
+            "version": "26.1",
+            "url": "https://osv.dev/vulnerability/GHSA-jp4c-xjxw-mgf9",
+            "identifiers": [
+              "GHSA-jp4c-xjxw-mgf9",
+              "CVE-2026-6357",
+              "PYSEC-2026-2876"
+            ]
+          },
+          {
+            "version": "26.2.0",
+            "url": "https://osv.dev/vulnerability/GHSA-qwm4-qh6w-59xr",
+            "identifiers": [
+              "GHSA-qwm4-qh6w-59xr",
+              "CVE-2026-13346",
+              "PYSEC-2026-3721"
+            ]
+          },
+          {
+            "version": "26.1.2",
+            "url": "https://osv.dev/vulnerability/GHSA-wf93-45jw-7689",
+            "identifiers": [
+              "GHSA-wf93-45jw-7689",
+              "CVE-2026-8643",
+              "PYSEC-2026-196"
+            ]
+          },
+          {
+            "version": "25.3",
+            "url": "https://osv.dev/vulnerability/PYSEC-2026-1795",
+            "identifiers": [
+              "PYSEC-2026-1795",
+              "CVE-2025-8869",
+              "GHSA-4xh5-x5gv-qwph"
+            ]
+          },
+          {
+            "version": "26.0",
+            "url": "https://osv.dev/vulnerability/PYSEC-2026-1796",
+            "identifiers": [
+              "PYSEC-2026-1796",
+              "CVE-2026-1703",
+              "GHSA-6vgw-5pg2-w6jp"
+            ]
+          },
+          {
+            "version": "26.1.2",
+            "url": "https://osv.dev/vulnerability/PYSEC-2026-196",
+            "identifiers": [
+              "PYSEC-2026-196",
+              "CVE-2026-8643",
+              "GHSA-wf93-45jw-7689"
+            ]
+          },
+          {
+            "version": "26.1",
+            "url": "https://osv.dev/vulnerability/PYSEC-2026-2875",
+            "identifiers": [
+              "PYSEC-2026-2875",
+              "CVE-2026-3219",
+              "GHSA-58qw-9mgm-455v"
+            ]
+          },
+          {
+            "version": "26.1",
+            "url": "https://osv.dev/vulnerability/PYSEC-2026-2876",
+            "identifiers": [
+              "PYSEC-2026-2876",
+              "CVE-2026-6357",
+              "GHSA-jp4c-xjxw-mgf9"
+            ]
+          },
+          {
+            "version": "26.2",
+            "url": "https://osv.dev/vulnerability/PYSEC-2026-3721",
+            "identifiers": [
+              "PYSEC-2026-3721",
+              "CVE-2026-13346",
+              "GHSA-qwm4-qh6w-59xr"
+            ]
+          }
+        ],
+        "title": "[安全修補優先] pip 26.3 已發布",
+        "body": "<!-- codex-skills:sbom-tool-update:pypi-pip:26.3 -->\n<!-- project-tool-security:68146c840a1f3bca97fb -->\n<!-- project-tool-release:pypi-pip:25.2 -->\n<!-- project-tool-release:pypi-pip:25.3 -->\n<!-- project-tool-release:pypi-pip:26.0 -->\n<!-- project-tool-release:pypi-pip:26.0.1 -->\n<!-- project-tool-release:pypi-pip:26.1 -->\n<!-- project-tool-release:pypi-pip:26.1.1 -->\n<!-- project-tool-release:pypi-pip:26.1.2 -->\n<!-- project-tool-release:pypi-pip:26.2 -->\n<!-- project-tool-release:pypi-pip:26.2.1 -->\n<!-- project-tool-release:pypi-pip:26.2.2 -->\n<!-- project-tool-release:pypi-pip:26.3 -->\n@SimonChung，SimonChung/codex-skills 使用的 pip 有新版。\n\n目前來源版本：`25.1.1`\n- 最新候選：[26.3](https://pypi.org/project/pip/26.3/)\n- 實際使用來源：`security/requirements-validation.txt`\n\n建議 24～48 小時內評估安全修補並驗證。\n\n安全修補線索（含中間版本；請依公告確認適用性）：\n\n- [25.3](https://osv.dev/vulnerability/GHSA-4xh5-x5gv-qwph)：GHSA-4xh5-x5gv-qwph, CVE-2025-8869, PYSEC-2026-1795\n- [26.1](https://osv.dev/vulnerability/GHSA-58qw-9mgm-455v)：GHSA-58qw-9mgm-455v, CVE-2026-3219, PYSEC-2026-2875\n- [26.0](https://osv.dev/vulnerability/GHSA-6vgw-5pg2-w6jp)：GHSA-6vgw-5pg2-w6jp, CVE-2026-1703, PYSEC-2026-1796\n- [26.1](https://osv.dev/vulnerability/GHSA-jp4c-xjxw-mgf9)：GHSA-jp4c-xjxw-mgf9, CVE-2026-6357, PYSEC-2026-2876\n- [26.2.0](https://osv.dev/vulnerability/GHSA-qwm4-qh6w-59xr)：GHSA-qwm4-qh6w-59xr, CVE-2026-13346, PYSEC-2026-3721\n- [26.1.2](https://osv.dev/vulnerability/GHSA-wf93-45jw-7689)：GHSA-wf93-45jw-7689, CVE-2026-8643, PYSEC-2026-196\n- [25.3](https://osv.dev/vulnerability/PYSEC-2026-1795)：PYSEC-2026-1795, CVE-2025-8869, GHSA-4xh5-x5gv-qwph\n- [26.0](https://osv.dev/vulnerability/PYSEC-2026-1796)：PYSEC-2026-1796, CVE-2026-1703, GHSA-6vgw-5pg2-w6jp\n- [26.1.2](https://osv.dev/vulnerability/PYSEC-2026-196)：PYSEC-2026-196, CVE-2026-8643, GHSA-wf93-45jw-7689\n- [26.1](https://osv.dev/vulnerability/PYSEC-2026-2875)：PYSEC-2026-2875, CVE-2026-3219, GHSA-58qw-9mgm-455v\n- [26.1](https://osv.dev/vulnerability/PYSEC-2026-2876)：PYSEC-2026-2876, CVE-2026-6357, GHSA-jp4c-xjxw-mgf9\n- [26.2](https://osv.dev/vulnerability/PYSEC-2026-3721)：PYSEC-2026-3721, CVE-2026-13346, GHSA-qwm4-qh6w-59xr\n\n新增或尚未採用版本：\n\n- [26.3](https://pypi.org/project/pip/26.3/)\n- [26.2.2](https://pypi.org/project/pip/26.2.2/)\n- [26.2.1](https://pypi.org/project/pip/26.2.1/)\n- [26.2](https://pypi.org/project/pip/26.2/)\n- [26.1.2](https://pypi.org/project/pip/26.1.2/)\n- [26.1.1](https://pypi.org/project/pip/26.1.1/)\n- [26.1](https://pypi.org/project/pip/26.1/)\n- [26.0.1](https://pypi.org/project/pip/26.0.1/)\n- [26.0](https://pypi.org/project/pip/26.0/)\n- [25.3](https://pypi.org/project/pip/25.3/)\n- [25.2](https://pypi.org/project/pip/25.2/)\n\n此通知不會自動升級。變更工具或映像後，須重新測試、核對 digest 並通過 SBOM，再提交推送。\n"
+      },
       {
         "status": "no_update",
         "tool": "Trivy",
@@ -29,16 +169,149 @@
         "status": "not_used",
         "tool": "Go",
         "published": false
+      },
+      {
+        "tool": "Git",
+        "tool_id": "git",
+        "status": "no_update",
+        "published": false,
+        "version_basis": {
+          "mode": "watch",
+          "started_at": "2026-11-12T00:47:30.111816+00:00",
+          "sources": [
+            {
+              "source": ".github/workflows/sbom-tool-versions.yml",
+              "versions": []
+            }
+          ],
+          "installed_version": null
+        },
+        "latest_stable_upstream": "2.56.1"
+      },
+      {
+        "tool": "Python",
+        "tool_id": "python",
+        "status": "no_update",
+        "published": false,
+        "version_basis": {
+          "mode": "watch",
+          "started_at": "2026-11-12T00:47:30.111816+00:00",
+          "sources": [
+            {
+              "source": ".github/workflows/sbom-tool-versions.yml",
+              "versions": []
+            }
+          ],
+          "installed_version": null
+        },
+        "latest_stable_upstream": "3.15.2"
+      },
+      {
+        "tool": "PowerShell",
+        "tool_id": "powershell",
+        "status": "no_update",
+        "published": false,
+        "version_basis": {
+          "mode": "watch",
+          "started_at": "2026-11-12T00:47:30.111816+00:00",
+          "sources": [
+            {
+              "source": "scripts/manage_skills.py",
+              "versions": []
+            }
+          ],
+          "installed_version": null
+        },
+        "latest_stable_upstream": "7.7.0"
+      },
+      {
+        "tool": "Docker Engine",
+        "tool_id": "docker-engine",
+        "status": "no_update",
+        "published": false,
+        "version_basis": {
+          "mode": "watch",
+          "started_at": "2026-11-12T00:47:30.111816+00:00",
+          "sources": [
+            {
+              "source": "scripts/verify_sbom.py",
+              "versions": []
+            }
+          ],
+          "installed_version": null
+        },
+        "latest_stable_upstream": "29.9.3"
+      },
+      {
+        "tool": "Docker Desktop",
+        "tool_id": "docker-desktop",
+        "status": "no_update",
+        "published": false,
+        "version_basis": {
+          "mode": "watch",
+          "started_at": "2026-11-12T00:47:30.111816+00:00",
+          "sources": [
+            {
+              "source": "scripts/verify_sbom.py",
+              "versions": []
+            }
+          ],
+          "installed_version": null
+        },
+        "latest_stable_upstream": "4.99.0"
+      },
+      {
+        "tool": "PyYAML",
+        "tool_id": "pypi-pyyaml",
+        "status": "no_update",
+        "published": false,
+        "version_basis": {
+          "mode": "pin",
+          "version": "6.0.3",
+          "versions": [
+            "6.0.3"
+          ],
+          "sources": [
+            {
+              "source": "security/requirements-validation.txt",
+              "versions": [
+                "6.0.3"
+              ]
+            }
+          ]
+        },
+        "latest_stable_upstream": "6.0.3"
+      },
+      {
+        "tool": "markitdown",
+        "tool_id": "pypi-markitdown",
+        "status": "no_update",
+        "published": false,
+        "version_basis": {
+          "mode": "pin",
+          "version": "0.1.9",
+          "versions": [
+            "0.1.9"
+          ],
+          "sources": [
+            {
+              "source": "security/requirements-validation.txt",
+              "versions": [
+                "0.1.9"
+              ]
+            }
+          ]
+        },
+        "latest_stable_upstream": "0.1.9"
       }
     ]
   },
   "diff": "passed",
-  "tests": 45,
   "existing_dependency_validation": {
-    "report": "/Users/simon/projects/codex-skills/.work/security/20261112T001423Z-262bb447/summary.json",
+    "report": "/Users/simon/projects/codex-skills/.work/security/20261112T005058Z-4d365bd0/summary.json",
     "summary": {
       "status": "passed",
-      "startedAt": "2026-11-12T00:14:23.207268+00:00",
+      "startedAt": "2026-11-12T00:50:58.641828+00:00",
       "scanner": "aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
       "requirementsSha256": "4a4e5a63f78dde7c42a22c00409a8da5b3f12748137aa96795c4157142830f8e",
       "threshold": [
@@ -59,7 +332,11 @@
         "highCritical": 0,
         "coverage": "exact pinned inventory"
       },
-      "finishedAt": "2026-11-12T00:14:34.346788+00:00"
+      "finishedAt": "2026-11-12T00:51:00.091821+00:00"
     }
+  },
+  "existing_tests": {
+    "tests": 12,
+    "status": "passed"
   }
 }
