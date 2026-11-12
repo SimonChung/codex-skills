@@ -1,19 +1,13 @@
 {
-  "schema_version": 1,
-  "pin_sources": [
-    {
-      "kind": "python_scanner",
-      "path": "scripts/verify_sbom.py"
+  "schema_version": 2,
+  "tools": {
+    "trivy": {
+      "pin_sources": [
+        {
+          "kind": "python_scanner",
+          "path": "scripts/verify_sbom.py"
+        }
+      ]
     }
-  ],
-  "go": {
-    "pin_sources": [
-      {
-        "kind": "go_mod",
-        "path": "go.mod",
-        "optional": true
-      }
-    ],
-    "baseline": "1.27.4"
   }
 }
