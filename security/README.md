@@ -39,6 +39,8 @@ Mac 需要另行實機驗收；使用 `python3` 與 `.work/validation-venv/bin/p
 
 Trivy 0.76.2 升級後的 [2026-11-11 驗證摘要](verification-20261111.json) 記錄 macOS 上的 12 項測試、31 個固定套件的重新掃描與已知 High 套件的拒絕結果；未重新安裝完整 Windows 驗證環境，也未重跑 Windows 測試。
 
+Windows 隔離驗證環境將 pip 從 `25.1.1` 升至 `26.3`。31 個固定套件與 CycloneDX 清單逐項相符，Trivy 的 HIGH／CRITICAL 命中為 0，90 項測試通過。詳見 [2026-11-18 驗證摘要](verification-20261118.json)。
+
 ## 每週 SBOM 工具版本檢查
 
 [Project tool versions](https://github.com/SimonChung/codex-skills/actions/workflows/sbom-tool-versions.yml) 在 GitHub-hosted Ubuntu runner 執行，排定每週一 UTC 01:00（台北 09:00）；GitHub 排程可能延遲，Mac 不需要開機。也可用 Actions 的 Run workflow 手動觸發，勾選 `dry_run` 時只預覽、不建立 Issue。
