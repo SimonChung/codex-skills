@@ -11,6 +11,8 @@ import sys
 import tempfile
 from urllib.parse import unquote
 
+from trivy_reports import run_trivy
+
 
 def read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding='utf-8-sig'))
@@ -45,30 +47,6 @@ def check_coverage(expected: set[str], report: dict, bom: dict) -> list[dict]:
     if not isinstance(findings, list):
         raise ValueError('Invalid Composer vulnerabilities')
     return findings
-
-
-def run_trivy(inputs: Path, reports: Path, severity: str, image: str | None) -> dict:
-    trivy = ['trivy']
-    output = str(reports)
-    if image:
-        trivy = ['docker', 'run', '--rm', '--workdir', '/inputs',
-                 '--volume', f'{inputs}:/inputs:ro', '--volume', f'{reports}:/reports',
-                 '--volume', 'codex-skills-trivy-cache:/root/.cache/trivy', image]
-        output = '/reports'
-    (inputs / '.trivyignore').touch()
-    scan_path = f'{output}/vulnerabilities.json'
-    bom_path = f'{output}/dependencies.cdx.json'
-    subprocess.run([*trivy, 'fs', '--scanners', 'vuln', '--include-dev-deps',
-                    '--list-all-pkgs', '--severity', severity, '--ignorefile', '.trivyignore', '--ignore-unfixed=false',
-                    '--exit-code', '0', '--format', 'json', '--output', scan_path, '.'],
-                   cwd=inputs, check=True)
-    subprocess.run([*trivy, 'convert', '--format', 'cyclonedx', '--output', bom_path, scan_path],
-                   cwd=inputs, check=True)
-    version = subprocess.check_output([*trivy, 'version', '--format', 'json'], cwd=inputs)
-    metadata = json.loads(version)
-    if not metadata.get('Version') or not metadata.get('VulnerabilityDB', {}).get('UpdatedAt'):
-        raise ValueError('Missing Trivy version or vulnerability database timestamp')
-    return metadata
 
 
 def scan(module: Path, reports: Path, severity: str, image: str | None = None) -> int:

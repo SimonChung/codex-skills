@@ -1,17 +1,15 @@
 import contextlib
-import importlib.util
 import io
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 
-script = Path(__file__).resolve().parents[1] / 'skills/sbom-security-check/scripts/scan_composer.py'
-spec = importlib.util.spec_from_file_location('scan_composer', script)
-gate = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(gate)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'skills/sbom-security-check/scripts'))
+import scan_composer as gate
 
 
 class ComposerTests(unittest.TestCase):
