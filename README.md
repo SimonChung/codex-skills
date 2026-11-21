@@ -79,8 +79,6 @@ git push origin main
 
 這是雙向的 Git 交換流程：Windows 修改推送後，Mac 執行 sync；Mac 修改推送後，Windows 執行 sync。直接修改個人技能目錄內已連結的檔案，也會改動本儲存庫，記得提交。
 
-本儲存庫獨立於 BeaconAR，拉取 BeaconAR 不會同步它。可以對 Codex 說：「開始前先同步 codex-skills，再同步 BeaconAR。」這裡沒有建立背景排程，也不會在未驗證時自動上傳技能修改。
-
 ## 技能檔案與執行環境
 
 技能同步不會安裝轉檔引擎、Docker、MCP、雲端服務、憑證或整份 Codex 設定。PDF／Word 技能仍依各自 `SKILL.md` 尋找 Codex bundled Python 及 MarkItDown；缺少工具時須依該環境安裝或回報。
