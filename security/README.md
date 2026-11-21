@@ -4,7 +4,7 @@
 
 兩個轉檔技能既有的 wrapper 會在使用時載入 Microsoft MarkItDown。為驗證這份技能集合，使用 `.work/validation-venv` 隔離環境安裝：
 
-- `PyYAML==6.0.3`：執行 Codex skill-creator 提供的 `quick_validate.py`。
+- `PyYAML==6.0.3` 供 Codex skill-creator 的 `quick_validate.py` 與 SBOM 技能的 Pub、CocoaPods 鎖檔解析使用。
 - `markitdown[docx,pdf]==0.1.9`：載入既有轉檔 wrapper 所需的依賴，不啟用雲端轉檔或 OCR。
 
 直接需求見 `requirements-validation.in`；`requirements-validation.txt` 是由實際隔離環境的 `pip freeze --all` 產生的完整套件版本快照，包含間接依賴與 pip。它不是使用者所有 Python 環境的清單，也不表示 Mac 已安裝相同版本。

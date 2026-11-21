@@ -13,6 +13,7 @@ description: "Generate and validate SBOMs, scan dependency and container vulnera
 - 優先維護及執行專案現有腳本，例如 `scripts/verify-sbom.ps1`。先確認它的實際行為、輸入、輸出及副作用，不因檔名含 SBOM 就假定完整可信。
 - 檢查目標原始碼及各子專案的套件清單。只有專案本身使用 PHP Composer（有 `composer.json` 或 `composer.lock`）時，才依 [PHP Composer 套件漏洞檢查](references/php-composer.md) 逐一掃描。排除第三方依賴目錄、工具快取及與交付無關的範例。純 PHP 專案若未使用 Composer，略過這項套件檢查。
 - 若交付範圍包含 Maven `pom.xml` 或採用 Gradle 的 JVM／Android 模組，依 [Java 套件漏洞檢查](references/java.md) 核對解析後的直接、間接與測試相依。同一儲存庫可同時執行 Java 與其他適用語言的檢查。略過僅存在於第三方依賴、快取、建置輸出或無關範例中的 Java 清單。
+- 對 Flutter／Dart、Kotlin 或 Swift 專案，依[行動平台套件檢查](references/flutter-kotlin-swift.md)找出實際交付平台的 Pub、Gradle／Maven、SwiftPM 與 CocoaPods 相依。Flutter 原生外掛與 Kotlin Multiplatform 各 target 都須納入適用的檢查。同一份鎖檔只掃一次，缺少已解析版本的部分要列入結果。
 - 沒有現有流程時，依實際技術組合選擇工具。Go／Node／Docker 與 Windows PowerShell 的做法見 [references/go-node-docker.md](references/go-node-docker.md)。其他語言使用能辨識該鎖檔／產物的掃描器；工具不支援時明列缺口。
 - 維持技能可跨專案使用：映像名稱、路徑、套件管理器、基底 OS、必要元件與嚴重度政策均從當前專案取得。沒有 npm、Ubuntu 或 Docker 的專案不必為了套用範例新增這些依賴。
 
