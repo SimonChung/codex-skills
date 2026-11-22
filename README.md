@@ -41,7 +41,7 @@ python3 scripts/manage_skills.py install
 python3 scripts/manage_skills.py status
 ```
 
-安裝完成後，下個 Codex 回合即可發現技能；若尚未顯示，重新開啟 Codex。此流程已在 Windows 驗證；POSIX 連結行為另以 Linux 隔離測試驗證，不能當作 Mac 原生實機驗收。
+安裝完成後，下個 Codex 回合即可發現技能；若尚未顯示，重新開啟 Codex。Windows 與 Apple Silicon Mac 均已實測安裝及同步。Mac 驗收涵蓋四個實際技能的符號連結、重複安裝、同名目錄備份，以及兩個 Git checkout 間的同步與本機修改保護。詳見 [macOS 實機驗收紀錄](security/verification-macos-20261122.json)。
 
 ## 已有同名技能時
 
@@ -83,7 +83,7 @@ git push origin main
 
 技能同步不會安裝轉檔引擎、Docker、MCP、雲端服務、憑證或整份 Codex 設定。PDF／Word 技能仍依各自 `SKILL.md` 尋找 Codex bundled Python 及 MarkItDown；缺少工具時須依該環境安裝或回報。
 
-兩個轉檔 wrapper 是跨平台 Python；PowerShell 範例中的 `<bundled-python>` 在 Mac 亦需替換為實際的 bundled Python 路徑，用一般 shell 呼叫。SBOM 的 Go／Node／Docker 參考文件仍保留其 Windows PowerShell 範例，實際命令依被檢查專案的平台調整。
+Mac 上若 Codex 內建 Python 缺少 MarkItDown，可用同一個 Python 建立技能專用的隔離環境。建立方式、兩份實檔的轉換測試與 SBOM 重跑命令見[驗證環境說明](security/README.md#macos)。兩個技能的命令以該環境的 Python 執行。SBOM 的 Go／Node／Docker 參考文件使用 Windows PowerShell 範例，實際命令依被檢查專案的平台調整。
 
 安裝／同步測試：
 

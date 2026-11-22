@@ -4,10 +4,13 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import os
+import re
 import shutil
 import zipfile
 from pathlib import Path
+from urllib.parse import quote
 
 
 def load_markitdown():
@@ -41,7 +44,7 @@ def extract_media(source: Path, asset_dir: Path) -> list[Path]:
 
 
 def relative_link(from_file: Path, target: Path) -> str:
-    return Path(os.path.relpath(target, from_file.parent)).as_posix()
+    return quote(Path(os.path.relpath(target, from_file.parent)).as_posix())
 
 
 def convert(
@@ -58,7 +61,10 @@ def convert(
         raise ValueError("Output Markdown must not overwrite the source DOCX.")
 
     converter = load_markitdown()
-    result = converter.convert_local(str(source))
+    # Full data URIs identify inline images even when several share the same MIME type.
+    result = converter.convert_local(
+        str(source), keep_data_uris=include_images, strip=None if include_images else ["img"]
+    )
     markdown = result.markdown
     if not isinstance(markdown, str) or not markdown.strip():
         raise RuntimeError("MarkItDown produced no Markdown text.")
@@ -68,6 +74,16 @@ def convert(
         media = extract_media(
             source,
             asset_dir.resolve() if asset_dir else output.with_name(output.stem + "_assets"),
+        )
+    if media:
+        links = {
+            base64.b64encode(path.read_bytes()).decode("ascii"): relative_link(output, path)
+            for path in media
+        }
+        markdown = re.sub(
+            r"(?<=\]\()data:[^;()\s]+;base64,([A-Za-z0-9+/=]+)(?=[ )])",
+            lambda match: links.get(match[1], match[0]),
+            markdown,
         )
 
     lines = markdown.rstrip().splitlines()

@@ -2,12 +2,12 @@
 
 安裝／同步程式 `scripts/manage_skills.py` 只使用 Python 標準函式庫，另呼叫本機 Git；Windows 連結建立使用 PowerShell。安裝技能檔案不會安裝 Python 套件或變更 Codex bundled runtime。
 
-兩個轉檔技能既有的 wrapper 會在使用時載入 Microsoft MarkItDown。為驗證這份技能集合，使用 `.work/validation-venv` 隔離環境安裝：
+兩個轉檔技能會在使用時載入 Microsoft MarkItDown。隔離驗證環境使用以下直接需求。
 
 - `PyYAML==6.0.3` 供 Codex skill-creator 的 `quick_validate.py` 與 SBOM 技能的 Pub、CocoaPods 鎖檔解析使用。
 - `markitdown[docx,pdf]==0.1.9`：載入既有轉檔 wrapper 所需的依賴，不啟用雲端轉檔或 OCR。
 
-直接需求見 `requirements-validation.in`；`requirements-validation.txt` 是由實際隔離環境的 `pip freeze --all` 產生的完整套件版本快照，包含間接依賴與 pip。它不是使用者所有 Python 環境的清單，也不表示 Mac 已安裝相同版本。
+直接需求見 `requirements-validation.in`。`requirements-validation.txt` 保存隔離環境的完整版本快照，包含間接依賴與 pip。Windows x64 和 Apple Silicon Mac 的實測環境均已用 `pip freeze --all` 核對這 31 個套件。
 
 ## 重建隔離驗證環境
 
@@ -17,11 +17,29 @@ Windows：
 python -m venv .work/validation-venv
 .work/validation-venv/Scripts/python.exe -m pip install -r security/requirements-validation.txt -r security/requirements-validation.in
 .work/validation-venv/Scripts/python.exe -m pip check
-python -m unittest discover -s tests -v
-python scripts/verify_sbom.py
+.work/validation-venv/Scripts/python.exe -m unittest discover -s tests -v
+.work/validation-venv/Scripts/python.exe scripts/verify_sbom.py
 ```
 
-Mac 需要另行實機驗收；使用 `python3` 與 `.work/validation-venv/bin/python` 對應上述命令。如果平台無法安裝同一版本組合，先核對上游支援，重新解析並產生該平台版本快照，再以 `--requirements` 掃描它，不沿用 Windows 的通過結論。
+### macOS
+
+在儲存庫根目錄執行。驗收時 Codex 內建 Python 3.12.14 缺少 MarkItDown，因此用該 Python 建立獨立的虛擬環境，供兩個轉檔技能共用。請將第一行換成 `load_workspace_dependencies` 傳回的 Python 路徑。首次建立時使用 `-m venv`，之後可直接用同一環境重跑。
+
+```sh
+bundled_python="/實際路徑/bin/python3"
+converter_env="$HOME/.local/share/codex-skills/markitdown"
+"$bundled_python" -m venv "$converter_env"
+py="$converter_env/bin/python"
+"$py" -m pip install -r security/requirements-validation.txt -r security/requirements-validation.in
+"$py" -m pip check
+"$py" -m pip freeze --all > "$converter_env/freeze.txt"
+diff -u security/requirements-validation.txt "$converter_env/freeze.txt"
+"$py" -B -m unittest discover -s tests -v
+"$py" -B -m unittest discover -s .github/tests -p 'test_*tool_versions.py' -v
+"$py" scripts/verify_sbom.py
+```
+
+實檔測試會從 `tests/fixtures/conversion/` 複製兩頁繁中 PDF 與含圖 DOCX，再執行兩個轉檔命令。驗收時這兩項必須實際執行。如需單獨重跑，可用 `"$py" -m unittest discover -s tests -p test_conversions.py -v`。
 
 需要重新驗證技能結構時，使用該台 Codex 內建 skill-creator 的 `scripts/quick_validate.py`，對 `skills.json` 中每個資料夾執行。此驗證器不是本儲存庫的自訂技能，不複製 Codex `.system` 內容。
 
@@ -33,13 +51,15 @@ Mac 需要另行實機驗收；使用 `python3` 與 `.work/validation-venv/bin/p
 
 測試包含實際安裝／Git 同步行為、正常報告、High 命中、清單缺漏、缺報告及 scanner 錯誤；安全測試中的模擬輸入是驗證阻擋邏輯，不能當作真實掃描證據。正式驗證另執行真實 Trivy 掃描。
 
-範圍不包含主機 OS、Python 執行檔／標準函式庫、Git、PowerShell、Codex bundled runtime、Mac 原生環境、scanner 映像本身，或未來使用 SBOM 技能時會檢查的其他專案。技能中的 Docker／npm／Go 工具依當次目標專案另行驗證。
+上述 CycloneDX 與漏洞數涵蓋隔離環境的固定 Python 套件。主機 OS、Python 執行檔與標準函式庫、Git、PowerShell、Codex 內建環境的其他套件、掃描器映像與其他專案均在此清單範圍之外。
 
 初次發布的 [2026-11-10 驗證摘要](verification-20261110.json) 記錄技能結構、Windows／POSIX 測試與 31 個驗證環境套件的 SBOM 結果；另以 `urllib3==1.26.5` 真實掃描確認 High 漏洞會回傳非 0 並阻擋通過。
 
 Trivy 0.76.2 升級後的 [2026-11-11 驗證摘要](verification-20261111.json) 記錄 macOS 上的 12 項測試、31 個固定套件的重新掃描與已知 High 套件的拒絕結果；未重新安裝完整 Windows 驗證環境，也未重跑 Windows 測試。
 
 Windows 隔離驗證環境將 pip 從 `25.1.1` 升至 `26.3`。31 個固定套件與 CycloneDX 清單逐項相符，Trivy 的 HIGH／CRITICAL 命中為 0，90 項測試通過。詳見 [2026-11-18 驗證摘要](verification-20261118.json)。
+
+[2026-11-22 macOS 實機驗收紀錄](verification-macos-20261122.json) 列出原有缺口、安裝與 Git 同步、兩種 Python 環境、實檔轉換、六種套件輸入的掃描結果，以及本次交付的 SBOM 和阻擋測試。
 
 ## 每週 SBOM 工具版本檢查
 

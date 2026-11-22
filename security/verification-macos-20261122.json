@@ -1,0 +1,117 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-22T23:32:39+08:00",
+  "host": {
+    "macOS": "27.2.1",
+    "build": "26B131",
+    "architecture": "arm64",
+    "git": "git version 2.54.0 (Apple Git-157)",
+    "codexBundle": "26.1119.11507"
+  },
+  "baseCommit": "d12f7748f79f1e9b078f8961d516f1b8995d23b3",
+  "previousMacEvidence": "security/verification-20261111.json",
+  "previousGaps": [
+    "四個實際技能在 Mac 安裝、被 Codex 列出、重複安裝及與 GitHub 同步的完整紀錄",
+    "在 Mac 重建固定套件環境並比對實際安裝清單",
+    "從已安裝技能以 Codex 內建 Python 實際轉換 PDF 與 DOCX",
+    "現行版本的技能結構、測試套件及掃描工具入口的實機證據"
+  ],
+  "skills": {
+    "names": [
+      "eisenhower-project-planning",
+      "pdf-to-markdown",
+      "sbom-security-check",
+      "word-to-markdown"
+    ],
+    "quickValidatePassed": 4,
+    "visibleInCodexSkillCatalog": 4,
+    "installation": "空目的目錄 install 兩次及 status 均驗得四個符號連結指向 checkout。現用目錄 install、status、sync 通過，備份數為 0。",
+    "integrationTests": "兩個 checkout 以本地 bare remote 驗證 fast-forward、讀到上游內容、保留未提交修改，另測同名目錄備份、拒絕覆蓋及連結失敗時還原。"
+  },
+  "python": {
+    "bundledVirtualenv": {
+      "python": "3.12.14",
+      "baseBundleHadMarkItDown": false,
+      "location": "~/.local/share/codex-skills/markitdown",
+      "projectTests": 36,
+      "monitorTests": 78
+    },
+    "separateVirtualenv": {
+      "python": "3.13.18",
+      "projectTests": 36,
+      "monitorTests": 78
+    },
+    "skippedPerEnvironment": 0,
+    "pipCheck": "passed in both environments",
+    "freezeAll": "Both inventories match security/requirements-validation.txt byte for byte"
+  },
+  "conversions": {
+    "engine": "MarkItDown 0.1.9, local conversion with plugins disabled",
+    "fixtures": "tests/fixtures/conversion/",
+    "sourceSha256": {
+      "pdf": "4fdac93271673018f6c28a666dc0608d2dcaa87c04f5dcee4a174ce631dedf4b",
+      "docx": "70e21429af3501e8e2a2c6148a5cde6a9277484fc568b8277c4e89e4029f1d05"
+    },
+    "inputHashesPreserved": true,
+    "identicalMarkdownAcrossRuntimes": true,
+    "pdf": "兩頁的繁中、英文及聯絡資訊依序出現；另存、遞迴、略過既有檔及單檔碰撞保護通過。純圖片 PDF 回報沒有文字。",
+    "docx": "繁中段落、標題、清單、表格、連結均保留。兩張 PNG 的正文替代文字與路徑均正確，附件位元組與來源一致；純文字輸出沒有圖片連結或資產目錄。純圖片 DOCX 可匯出原圖，純文字模式回報沒有文字。",
+    "wordCorrection": "修正 MarkItDown 截短的內嵌圖片網址，讓正文指向匯出的檔案，並在 --no-images 關閉圖片標記。",
+    "wordWrapperSha256": "1d318d1e5d538b8ba0ecc4d85bda8cc3292b3bd40fe668e18a758649e660c3ba"
+  },
+  "sbom": {
+    "scannedInput": "pip freeze --all from the bundled-Python virtual environment",
+    "inventorySha256": "3f33bc1881960cd53435efd1817271dc389119e313f6909843aee75f9956ade1",
+    "scanner": "aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+    "databaseUpdatedAt": "2026-11-22T12:38:44.47270345Z",
+    "threshold": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "exclusions": [],
+    "coverage": {
+      "packages": 31,
+      "highCritical": 0,
+      "coverage": "exact pinned inventory"
+    },
+    "localReport": ".work/security/20261122T152928Z-7e1c7a93",
+    "negativeControl": {
+      "input": "urllib3==1.26.5",
+      "report": ".work/security/20261122T152232Z-776dc5a1",
+      "exitCode": 1,
+      "highCritical": 7
+    }
+  },
+  "scannerEntryPoints": {
+    "scope": "本專案技能中的三個命令，各用獨立範例驗證報告所涵蓋的套件版本。",
+    "modes": [
+      "macOS arm64 Trivy CLI 0.76.2",
+      "Docker Desktop with the pinned Trivy image"
+    ],
+    "nativeArchiveSha256": "ae7ea358326960406b703c77b2ac490190797d80b306b5b50c2a27221da0a5b8",
+    "packagesPerFixtureInEachMode": {
+      "composer": 2,
+      "maven": 2,
+      "gradle": 1,
+      "pub": 1,
+      "swift": 1,
+      "pods": 1
+    },
+    "highCriticalPerRun": 0,
+    "localReports": ".work/mac-20261122/{native,helper}-{composer,maven,gradle,pub,swift,pods}/"
+  },
+  "toolMonitor": {
+    "dryRun": "ok",
+    "published": false,
+    "updatesAtCheck": {
+      "Docker Engine": "29.10.0",
+      "Docker Desktop": "4.100.0",
+      "PyYAML": "6.0.4"
+    }
+  },
+  "scopeNotes": [
+    "Apple Silicon macOS 27.2.1 實機。Intel Mac 與 Windows 未在本次重跑。",
+    "PDF 與 DOCX 使用隨附測試文件；OCR 及雲端轉檔未啟用。",
+    "SBOM 涵蓋隔離環境的 Python 套件。主機 OS、Python 本體、掃描器及其他專案不在該份清單內。"
+  ]
+}
