@@ -4,7 +4,7 @@
 
 兩個轉檔技能會在使用時載入 Microsoft MarkItDown。隔離驗證環境使用以下直接需求。
 
-- `PyYAML==6.0.3` 供 Codex skill-creator 的 `quick_validate.py` 與 SBOM 技能的 Pub、CocoaPods 鎖檔解析使用。
+- `PyYAML==6.0.4` 供 Codex skill-creator 的 `quick_validate.py` 與 SBOM 技能的 Pub、CocoaPods 鎖檔解析使用。
 - `markitdown[docx,pdf]==0.1.9`：載入既有轉檔 wrapper 所需的依賴，不啟用雲端轉檔或 OCR。
 
 直接需求見 `requirements-validation.in`。`requirements-validation.txt` 保存隔離環境的完整版本快照，包含間接依賴與 pip。Windows x64 和 Apple Silicon Mac 的實測環境均已用 `pip freeze --all` 核對這 31 個套件。
