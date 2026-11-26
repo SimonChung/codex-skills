@@ -4,6 +4,7 @@ Windows 與 Mac 共用的私人 Codex 自訂技能儲存庫：[SimonChung/codex-
 
 | 技能 | 用途 |
 |---|---|
+| `calm-app-ui` | 清雅多語 App 介面設計與檢視，涵蓋長譯文、大字級及從右到左的排版 |
 | `eisenhower-project-planning` | 專案、模組與子功能的優先序及實作狀態規劃 |
 | `pdf-to-markdown` | 使用 Microsoft MarkItDown 轉換 PDF |
 | `word-to-markdown` | 使用 Microsoft MarkItDown 轉換 Word DOCX |

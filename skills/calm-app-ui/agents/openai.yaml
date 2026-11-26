@@ -1,0 +1,4 @@
+interface:
+  display_name: "清雅多語 App UI 設計"
+  short_description: "設計清雅易讀的 App 畫面，讓長譯文、大字級與不同閱讀方向都能自然排版"
+  default_prompt: "請用 $calm-app-ui 設計閱讀 App 的收藏頁，示範繁體中文和英文在窄螢幕上的排版。"
